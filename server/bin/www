@@ -11,6 +11,7 @@ const { app, sessionStore } = require("../app");
 const http = require("http");
 const db = require("../db");
 const onlineUsers = require("../onlineUsers");
+const { Json } = require("sequelize/types/lib/utils");
 
 /**
  * Get port from environment and store in Express.
@@ -41,10 +42,13 @@ io.on("connection", (socket) => {
   });
 
   socket.on("new-message", (data) => {
-    socket.broadcast.emit("new-message", {
-      message: data.message,
-      sender: data.sender,
-    });
+    console.log('new-message-server', data, data.recipientId.toString())
+    // socket.broadcast.emit("new-message", {
+    //   message: data.message,
+    //   sender: data.sender,
+    // });    
+    
+    socket.broadcast.to(data.recipientId.toString()).emit('new-message', {  message: data.message, sender: data.sender,});
   });
 
   socket.on("logout", (id) => {
@@ -54,6 +58,12 @@ io.on("connection", (socket) => {
       socket.broadcast.emit("remove-offline-user", id);
     }
   });
+
+  socket.on('join-room', (id, cb) => {    
+    console.log('join-server', id.toString())
+    socket.join(id.toString());
+    cb(`joined: ${id}`)
+  })
 });
 
 sessionStore
