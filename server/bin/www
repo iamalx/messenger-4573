@@ -47,6 +47,7 @@ io.on("connection", (socket) => {
 
   socket.on("new-message", (data) => {
     const recipientId = data.recipientId.toString();
+
     // send message to user/room if they are the receiver
     socket.broadcast
       .to(recipientId)
@@ -63,7 +64,7 @@ io.on("connection", (socket) => {
       userIndex = onlineUsers.indexOf(id);
       onlineUsers.splice(userIndex, 1);
       socket.broadcast.emit("remove-offline-user", id);
-      socket.leave(id.toString()) 
+      socket.leave(id.toString()); 
     }
   });
 

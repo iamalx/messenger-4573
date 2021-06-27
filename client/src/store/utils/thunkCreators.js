@@ -84,9 +84,7 @@ export const fetchConversations = () => async (dispatch) => {
 };
 
 const saveMessage = async (body) => {
-  console.log('bodyToSend: ', body)
   const { data } = await axios.post("/api/messages", body);
-  console.log('dataRespose: ', data)
   return data;
 };
 
