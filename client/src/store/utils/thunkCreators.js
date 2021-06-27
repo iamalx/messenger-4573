@@ -73,13 +73,11 @@ export const logout = (id) => async (dispatch) => {
 // CONVERSATIONS THUNK CREATORS
 
 export const fetchConversations = () => async (dispatch) => {
-  console.log('fetchConversations: ', dispatch)
   try {
     const { data } = await axios.get("/api/conversations");
     dispatch(gotConversations(data));
   } catch (error) {
-    console.log('fetchConversations-error: ', error)
-    // console.error(error);
+    console.error(error);
   }
 };
 
@@ -99,7 +97,6 @@ const sendMessage = (data, body) => {
 // message format to send: {recipientId, text, conversationId}
 // conversationId will be set to null if its a brand new conversation
 export const postMessage = (body) => async (dispatch) => {
-  console.log('postMssg: ', body, dispatch)
   try {
     const data = await saveMessage(body);
 
@@ -118,7 +115,6 @@ export const postMessage = (body) => async (dispatch) => {
 export const searchUsers = (searchTerm) => async (dispatch) => {
   try {
     const { data } = await axios.get(`/api/users/${searchTerm}`);
-    console.log('search users', data)
     dispatch(setSearchedUsers(data));
   } catch (error) {
     console.error(error);
