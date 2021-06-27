@@ -23,12 +23,8 @@ export const fetchUser = () => async (dispatch) => {
     const { data } = await axios.get("/auth/user");
     dispatch(gotUser(data));
     if (data.id) {
-      console.log('onlineeeeeeeeeeeee', data)
       socket.emit("go-online", data.id);
-      socket.emit('join-room', data.id, cb => {
-        console.log('joined room:', cb)
-      });
-      
+      socket.emit('join-room', data.id);
     }
   } catch (error) {
     console.error(error);
@@ -42,8 +38,8 @@ export const register = (credentials) => async (dispatch) => {
     const { data } = await axios.post("/auth/register", credentials);
     await localStorage.setItem("messenger-token", data.token);
     dispatch(gotUser(data));
-    console.log('lllll',data)
     socket.emit("go-online", data.id);
+    socket.emit('join-room', data.id);
   } catch (error) {
     console.error(error);
     dispatch(gotUser({ error: error.response.data.error || "Server Error" }));
@@ -55,8 +51,8 @@ export const login = (credentials) => async (dispatch) => {
     const { data } = await axios.post("/auth/login", credentials);
     await localStorage.setItem("messenger-token", data.token);
     dispatch(gotUser(data));
-    console.log('iii', data)
     socket.emit("go-online", data.id);
+    socket.emit('join-room', data.id);
   } catch (error) {
     console.error(error);
     dispatch(gotUser({ error: error.response.data.error || "Server Error" }));
