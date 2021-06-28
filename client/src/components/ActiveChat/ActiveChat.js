@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { Box } from "@material-ui/core";
 import { Input, Header, Messages } from "./index";
@@ -24,6 +24,22 @@ const ActiveChat = (props) => {
   const classes = useStyles();
   const { user } = props;
   const conversation = props.conversation || {};
+
+  useEffect(() => {
+    // Update the document title using the browser API
+    console.log('user', user)
+    console.log('conversation', conversation.messages)
+    if (conversation?.messages) {
+      for (let message of conversation.messages) {
+        if ( (user.id !== message.senderId) && (!message.readByRecipient) ) {
+          console.log(message)
+          
+        }
+      }
+    }
+    
+    
+  }, [conversation]);
 
   return (
     <Box className={classes.root}>
