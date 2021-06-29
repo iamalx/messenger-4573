@@ -22,7 +22,8 @@ const styles = {
 class Chat extends Component {
   handleClick = async (conversation) => {
     await this.props.setActiveChat(conversation.otherUser.username);
-  };3
+  };
+  
 
   render() {
     const { classes } = this.props;
@@ -38,7 +39,7 @@ class Chat extends Component {
           online={otherUser.online}
           sidebar={true}
         />
-        <ChatContent conversation={this.props.conversation} />
+        <ChatContent conversation={this.props.conversation} otherUser={this.props}/>
       </Box>
     );
   }

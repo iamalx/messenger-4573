@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { Box, Typography } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
+import { Box, Typography, Badge } from "@material-ui/core";
+import { makeStyles, withStyles } from "@material-ui/core/styles";
+import Chip from '@material-ui/core/Chip';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -34,6 +35,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const StyledBadge = withStyles(() => ({
+  badge: {
+    right: 35,
+    top: 17,
+  },
+}))(Badge);
+
 const ChatContent = (props) => {
   const classes = useStyles();
   const [ unreadMessages, setUnreadMessages ] = useState(0) 
@@ -42,26 +50,38 @@ const ChatContent = (props) => {
   const { latestMessageText, otherUser } = conversation;
 
   useEffect(() => {
-    console.log('chatProps', props)
-    let UnreadMessagesCount = 0;
+    console.log('chatProps', props, )
+    console.log('old', unreadMessages )
+    let unreadMessagesCount = 0;
     for (let message of conversation.messages) {
-      if (conversation.otherUser.id === message.senderId && !message.readByRecipient) UnreadMessagesCount ++
+      if (conversation.otherUser.id === message.senderId && !message.readByRecipient)
+        unreadMessagesCount ++;
     }
-    setUnreadMessages(UnreadMessagesCount);
-    
+
+    if (unreadMessagesCount == 0 && unreadMessages >  unreadMessagesCount) {
+      setTimeout( _ => {
+        setUnreadMessages(unreadMessagesCount);
+      }, 2000) 
+    } else {
+      setUnreadMessages(unreadMessagesCount);
+    }
 
   }, [conversation]) 
 
   return (
     <Box className={classes.root}>
-      <Box>
-        <Typography className={classes.username}>
-          {otherUser.username}
-        </Typography>
-        <Typography className={classes.previewText}>
-          {latestMessageText} {unreadMessages}
-        </Typography>
-      </Box>
+      {/* <Badge badgeContent={unreadMessages} color="primary"> */}
+        <Box>
+            <Typography className={classes.username}>
+              {otherUser.username}
+            </Typography>
+            <Typography className={classes.previewText}>
+              {latestMessageText}
+            </Typography>
+        </Box>
+        <StyledBadge badgeContent={unreadMessages} color="primary">    
+        </StyledBadge>
+      {/* </Badge> */}
     </Box>
   );
 };
