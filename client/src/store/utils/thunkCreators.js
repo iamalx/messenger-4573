@@ -119,11 +119,9 @@ export const postMessage = (body) => async (dispatch) => {
 };
 
 export const putReadMessage = (body) => async (dispatch) =>  {
-  console.log(body, 'readMessages')
   try {
     const data = await markMessageAsRead(body);
-    console.log('n', data.updatedMessages)
-    dispatch(updateReadMessage(data.updatedMessages))
+    dispatch(updateReadMessage(data.updatedMessages));
   } catch (error) {
     console.error(error);
   }

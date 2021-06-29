@@ -44,13 +44,14 @@ router.post("/", async (req, res, next) => {
   }
 });
 
+// expects an array of messages to mark as read.
+// res: an array of changed messages 
 router.put("/", async (req, res, next) => { 
-  console.log('PUT', req.body)
-  const { messagesToUpdate } = req.body
   try {
-    const updatedMessages = []
+    const { messagesToUpdate } = req.body;
+    const updatedMessages = [];
+    
     for(let message of messagesToUpdate) {
-      console.log(message, 'message')
       const updatedMessage = await Message.update(
         {readByRecipient: true},
         {returning: true, where: { id: message.id }}

@@ -27,22 +27,17 @@ const ActiveChat = (props) => {
   const conversation = props.conversation || {};
 
   useEffect(() => {
-    // Update the document title using the browser API
-    console.log('user', props)
-    console.log('conversation', conversation.messages)
+    // mark messages as read
     if (conversation?.messages) {
-      const messagesToUpdate = []
+      const messagesToUpdate = [];
       for (let message of conversation.messages) {
-        if ( (user.id !== message.senderId) && (!message.readByRecipient) ) {
-          console.log(message, 'inmessage')
-          messagesToUpdate.push(message) 
-        };
+        // if readByRecipient is false add to array to send to API 
+        if ((user.id !== message.senderId) && (!message.readByRecipient))
+          messagesToUpdate.push(message);
       };
-      console.log(messagesToUpdate)
       if (messagesToUpdate.length >= 1)
         props.putReadMessage({ messagesToUpdate });
     }
-    
     
   }, [conversation] );
 
