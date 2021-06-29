@@ -23,6 +23,10 @@ export const addMessageToStore = (state, payload) => {
     }
   });
 };
+ 
+export const updateReadMessageToStore = (state, readMessages) => {
+
+}
 
 export const addOnlineUserToStore = (state, id) => {
   return state.map((convo) => {

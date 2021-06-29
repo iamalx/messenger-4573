@@ -86,6 +86,11 @@ const saveMessage = async (body) => {
   return data;
 };
 
+const markMessageAsRead = async (body) => {
+  const { data } = await axios.put("/api/messages", body);
+  return data;
+};
+
 const sendMessage = (data, body) => {
   socket.emit("new-message", {
     message: data.message,
@@ -111,6 +116,17 @@ export const postMessage = (body) => async (dispatch) => {
     console.error(error);
   }
 };
+
+export const putReadMessage = (body) => async (dispatch) =>  {
+  try {
+    const data = await markMessageAsRead(body);
+    console.log('n', data)
+
+  } catch (error) {
+    console.error(error);
+  }
+
+} 
 
 export const searchUsers = (searchTerm) => async (dispatch) => {
   try {

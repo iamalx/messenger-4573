@@ -44,4 +44,17 @@ router.post("/", async (req, res, next) => {
   }
 });
 
+router.put("/", async (req, res, next) => { 
+  console.log('PUT', req.body)
+  try {
+    const message = await Message.update(
+      {readByRecipient: true},
+      {returning: true, where: {id: req.body.id}}
+    );
+    return res.json({ message });
+  } catch (error) {
+    next(error);
+  }
+})
+
 module.exports = router;
