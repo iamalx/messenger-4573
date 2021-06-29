@@ -12,7 +12,9 @@ export const addMessageToStore = (state, payload) => {
   }
 
   return state.map((convo) => {
+    // console.log(convo)
     if (convo.id === message.conversationId) {
+      console.log(convo, 'convo', message)
       const convoCopy = { ...convo };
       convoCopy.messages.push(message);
       convoCopy.latestMessageText = message.text;
@@ -25,7 +27,28 @@ export const addMessageToStore = (state, payload) => {
 };
  
 export const updateReadMessageToStore = (state, readMessages) => {
+  console.log(readMessages, 'vv')
+  const readMessagesIds  = readMessages.map(message =>  {return message.id})
+  console.log(readMessagesIds, 'updateRead')
+  return state.map((convo) => {
+    if (convo.id === readMessages[0].conversationId) {
+      const convoCopy = { ...convo };
+      // convoCopy.messages.push(message);
+      // convoCopy.latestMessageText = message.text;
+      convoCopy.messages.forEach( (message, i) => {
+        console.log(message)
+        if(readMessagesIds.includes(message.id)) {
+          console.log(convoCopy.messages[i].readByRecipient)
+          convoCopy.messages[i].readByRecipient = true; 
+        };
+      });
+        
 
+      return convoCopy;
+    } else {
+      return convo;
+    }
+  });
 }
 
 export const addOnlineUserToStore = (state, id) => {

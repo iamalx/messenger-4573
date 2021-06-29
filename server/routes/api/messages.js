@@ -46,12 +46,19 @@ router.post("/", async (req, res, next) => {
 
 router.put("/", async (req, res, next) => { 
   console.log('PUT', req.body)
+  const readMessages = req.body.messagesToUpdate
   try {
-    const message = await Message.update(
-      {readByRecipient: true},
-      {returning: true, where: {id: req.body.id}}
-    );
-    return res.json({ message });
+    const updatedMessages = []
+    for(let message of readMessages) {
+      console.log(message, 'message')
+      const updatedMessage = await Message.update(
+        {readByRecipient: true},
+        {returning: true, where: { id: message.id }}
+      );
+      updatedMessages.push(updatedMessage[1][0]);
+    } 
+    
+    return res.json({ updatedMessages });
   } catch (error) {
     next(error);
   }

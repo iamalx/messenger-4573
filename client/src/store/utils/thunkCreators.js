@@ -5,6 +5,7 @@ import {
   addConversation,
   setNewMessage,
   setSearchedUsers,
+  updateReadMessage
 } from "../conversations";
 import { gotUser, setFetchingStatus } from "../user";
 
@@ -118,10 +119,11 @@ export const postMessage = (body) => async (dispatch) => {
 };
 
 export const putReadMessage = (body) => async (dispatch) =>  {
+  console.log(body, 'readMessages')
   try {
     const data = await markMessageAsRead(body);
-    console.log('n', data)
-
+    console.log('n', data.updatedMessages)
+    dispatch(updateReadMessage(data.updatedMessages))
   } catch (error) {
     console.error(error);
   }

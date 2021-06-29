@@ -4,6 +4,7 @@ import {
   addSearchedUsersToStore,
   removeOfflineUserFromStore,
   addMessageToStore,
+  updateReadMessageToStore
 } from "./utils/reducerFunctions";
 
 // ACTIONS
@@ -35,7 +36,7 @@ export const setNewMessage = (message, sender) => {
 
 export const updateReadMessage = (readMessages) => {
   return {
-    type: UPD_READ_MESSAGE,
+    type: UPDATE_READ_MESSAGE,
     readMessages,
   };
 };

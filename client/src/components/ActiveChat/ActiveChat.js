@@ -31,13 +31,15 @@ const ActiveChat = (props) => {
     console.log('user', props)
     console.log('conversation', conversation.messages)
     if (conversation?.messages) {
+      const messagesToUpdate = []
       for (let message of conversation.messages) {
         if ( (user.id !== message.senderId) && (!message.readByRecipient) ) {
-          console.log(message)
-          props.putReadMessage(message)
-          
-        }
-      }
+          console.log(message, 'inmessage')
+          messagesToUpdate.push(message) 
+        };
+      };
+      console.log(messagesToUpdate)
+      props.putReadMessage({ messagesToUpdate })
     }
     
     
