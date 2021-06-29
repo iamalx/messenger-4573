@@ -39,11 +39,12 @@ const ActiveChat = (props) => {
         };
       };
       console.log(messagesToUpdate)
-      props.putReadMessage({ messagesToUpdate })
+      if (messagesToUpdate.length >= 1)
+        props.putReadMessage({ messagesToUpdate });
     }
     
     
-  }, [conversation]);
+  }, [conversation] );
 
   return (
     <Box className={classes.root}>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Box, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -36,9 +36,21 @@ const useStyles = makeStyles((theme) => ({
 
 const ChatContent = (props) => {
   const classes = useStyles();
+  const [ unreadMessages, setUnreadMessages ] = useState(0) 
 
   const { conversation } = props;
   const { latestMessageText, otherUser } = conversation;
+
+  useEffect(() => {
+    console.log('chatProps', props)
+    let UnreadMessagesCount = 0;
+    for (let message of conversation.messages) {
+      if (conversation.otherUser.id === message.senderId && !message.readByRecipient) UnreadMessagesCount ++
+    }
+    setUnreadMessages(UnreadMessagesCount);
+    
+
+  }, [conversation]) 
 
   return (
     <Box className={classes.root}>
@@ -47,7 +59,7 @@ const ChatContent = (props) => {
           {otherUser.username}
         </Typography>
         <Typography className={classes.previewText}>
-          {latestMessageText}
+          {latestMessageText} {unreadMessages}
         </Typography>
       </Box>
     </Box>

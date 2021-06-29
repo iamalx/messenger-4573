@@ -46,10 +46,10 @@ router.post("/", async (req, res, next) => {
 
 router.put("/", async (req, res, next) => { 
   console.log('PUT', req.body)
-  const readMessages = req.body.messagesToUpdate
+  const { messagesToUpdate } = req.body
   try {
     const updatedMessages = []
-    for(let message of readMessages) {
+    for(let message of messagesToUpdate) {
       console.log(message, 'message')
       const updatedMessage = await Message.update(
         {readByRecipient: true},
