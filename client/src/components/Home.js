@@ -28,7 +28,6 @@ class Home extends Component {
         isLoggedIn: true,
       });
     }
-    console.log()
   }
 
   componentDidMount() {
