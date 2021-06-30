@@ -23,6 +23,7 @@ class Chat extends Component {
   handleClick = async (conversation) => {
     await this.props.setActiveChat(conversation.otherUser.username);
   };
+  
 
   render() {
     const { classes } = this.props;
@@ -38,7 +39,7 @@ class Chat extends Component {
           online={otherUser.online}
           sidebar={true}
         />
-        <ChatContent conversation={this.props.conversation} />
+        <ChatContent conversation={this.props.conversation}/>
       </Box>
     );
   }

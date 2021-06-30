@@ -13,7 +13,7 @@ router.post("/", async (req, res, next) => {
 
     // if we already know conversation id, we can save time and just add it to message and return
     if (conversationId) {
-      const message = await Message.create({ senderId, text, conversationId });
+      const message = await Message.create({ senderId, text, conversationId, readByRecipient: false, });
       return res.json({ message, sender });
     }
     // if we don't have conversation id, find a conversation to make sure it doesn't already exist
@@ -36,11 +36,33 @@ router.post("/", async (req, res, next) => {
       senderId,
       text,
       conversationId: conversation.id,
+      readByRecipient: false,
     });
     res.json({ message, sender });
   } catch (error) {
     next(error);
   }
 });
+
+// expects an array of messages to mark as read.
+// res: an array of changed messages 
+router.put("/", async (req, res, next) => { 
+  try {
+    const { messagesToUpdate } = req.body;
+    const updatedMessages = [];
+    
+    for(let message of messagesToUpdate) {
+      const updatedMessage = await Message.update(
+        {readByRecipient: true},
+        {returning: true, where: { id: message.id }}
+      );
+      updatedMessages.push(updatedMessage[1][0]);
+    } 
+    
+    return res.json({ updatedMessages });
+  } catch (error) {
+    next(error);
+  }
+})
 
 module.exports = router;
