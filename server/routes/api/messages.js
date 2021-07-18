@@ -44,22 +44,23 @@ router.post("/", async (req, res, next) => {
   }
 });
 
-// expects an array of messages to mark as read.
-// res: an array of changed messages 
-router.put("/", async (req, res, next) => { 
+// updates all unread message in a convo
+router.put("/markAsRead/:convoId", async (req, res, next) => { 
   try {
-    const { messagesToUpdate } = req.body;
-    const updatedMessages = [];
+    const convoId = req.convoId;
+    console.log('convoId: ', convoId)
+    // const { messagesToUpdate } = req.body;
+    // const updatedMessages = [];
     
-    for(let message of messagesToUpdate) {
-      const updatedMessage = await Message.update(
-        {readByRecipient: true},
-        {returning: true, where: { id: message.id }}
-      );
-      updatedMessages.push(updatedMessage[1][0]);
-    } 
+    // for(let message of messagesToUpdate) {
+    //   const updatedMessage = await Message.update(
+    //     {readByRecipient: true},
+    //     {returning: true, where: { id: message.id }}
+    //   );
+    //   updatedMessages.push(updatedMessage[1][0]);
+    // } 
     
-    return res.json({ updatedMessages });
+    // return res.json({ updatedMessages });
   } catch (error) {
     next(error);
   }

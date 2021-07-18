@@ -28,16 +28,18 @@ const ActiveChat = (props) => {
 
   useEffect(() => {
     // mark messages as read
-    if (conversation?.messages) {
-      const messagesToUpdate = [];
-      for (let message of conversation.messages) {
-        // if readByRecipient is false add to array to send to API 
-        if ((user.id !== message.senderId) && (!message.readByRecipient))
-          messagesToUpdate.push(message);
-      };
-      if (messagesToUpdate.length >= 1)
-        props.putReadMessage({ messagesToUpdate });
-    }
+    // if (conversation?.messages) {
+    //   const messagesToUpdate = [];
+    //   for (let message of conversation.messages) {
+    //     // if readByRecipient is false add to array to send to API 
+    //     if ((user.id !== message.senderId) && (!message.readByRecipient))
+    //       messagesToUpdate.push(message);
+    //   };
+    //   if (messagesToUpdate.length >= 1)
+    //     props.putReadMessage({ messagesToUpdate });
+    // }
+    console.log(conversation.id)
+    props.putReadMessage(conversation.id);
     
   }, [conversation] );
 

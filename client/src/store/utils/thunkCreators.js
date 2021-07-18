@@ -87,8 +87,8 @@ const saveMessage = async (body) => {
   return data;
 };
 
-const markMessageAsRead = async (body) => {
-  const { data } = await axios.put("/api/messages", body);
+const markMessageAsRead = async (convoId) => {
+  const { data } = await axios.put($`/api/messages/marAsRead/${convoId}`);
   return data;
 };
 
