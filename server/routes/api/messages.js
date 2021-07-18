@@ -47,8 +47,13 @@ router.post("/", async (req, res, next) => {
 // updates all unread message in a convo
 router.put("/markAsRead/:convoId", async (req, res, next) => { 
   try {
-    const convoId = req.convoId;
+    const convoId = req.params.convoId;
     console.log('convoId: ', convoId)
+    const updatedMessage = await Message.update(
+        {readByRecipient: true},
+        {returning: true, where: { conversationId: convoId, readByRecipient: false }}
+    );
+    console.log(updatedMessage)
     // const { messagesToUpdate } = req.body;
     // const updatedMessages = [];
     

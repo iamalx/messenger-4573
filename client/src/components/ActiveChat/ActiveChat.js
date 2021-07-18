@@ -38,8 +38,11 @@ const ActiveChat = (props) => {
     //   if (messagesToUpdate.length >= 1)
     //     props.putReadMessage({ messagesToUpdate });
     // }
-    console.log(conversation.id)
-    props.putReadMessage(conversation.id);
+    
+    console.log(conversation)
+    // if ((user.id === conversation.otherUser.id))
+    // TODO: add logic to update only if recipient and unread 
+      props.putReadMessage(conversation.id);
     
   }, [conversation] );
 
