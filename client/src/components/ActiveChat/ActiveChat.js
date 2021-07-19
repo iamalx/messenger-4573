@@ -31,7 +31,7 @@ const ActiveChat = (props) => {
     if (conversation?.messages) {
       const lastMessage =  conversation.messages[conversation.messages.length -1];
 
-      if ((user.id !== lastMessage.senderId && conversation.unreadMssgsByRecipient > 0))
+      if (( lastMessage && user.id !== lastMessage?.senderId && conversation.unreadMssgsByRecipient > 0))
         props.putReadMessage(conversation.id);
     }
   }, [conversation]);
