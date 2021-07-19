@@ -22,7 +22,7 @@ router.get("/", async (req, res, next) => {
       attributes: ["id"],
       order: [[Message, "createdAt", "ASC"]],
       include: [
-        { model: Message, order: ["createdAt", "DESC"] },
+        { model: Message },
         {
           model: User,
           as: "user1",
@@ -49,6 +49,8 @@ router.get("/", async (req, res, next) => {
     });
   
     for (let i = 0; i < conversations.length; i++) {
+      if(conversations[i].id == 7)
+      console.log(conversations[i].messages)
       const convo = conversations[i];
       const convoJSON = convo.toJSON();
 
