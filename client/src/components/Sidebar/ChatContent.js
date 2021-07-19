@@ -46,22 +46,22 @@ const ChatContent = (props) => {
   const [ unreadMessages, setUnreadMessages ] = useState(0);
 
   const { conversation } = props;
-  const { latestMessageText, otherUser } = conversation;
+  const { latestMessageText, otherUser, unreadMssgsByRecipient } = conversation;
 
   useEffect(() => {
     // update unreadMessages count in state
-    let unreadMessagesCount = 0;
-    for (let message of conversation.messages) {
-      if (conversation.otherUser.id === message.senderId && !message.readByRecipient)
-        // count unread messages if sent to user
-        unreadMessagesCount ++;
-    };
+    // let unreadMessagesCount = 0;
+    // for (let message of conversation.messages) {
+    //   if (conversation.otherUser.id === message.senderId && !message.readByRecipient)
+    //     // count unread messages if sent to user
+    //     unreadMessagesCount ++;
+    // };
 
     // set timeout to remove badge after 1.5s
-    if (unreadMessagesCount == 0 && unreadMessages >  unreadMessagesCount)
-      setTimeout( _ => { setUnreadMessages(unreadMessagesCount) }, 1500);
-    else 
-      setUnreadMessages(unreadMessagesCount);
+    // if (unreadMessagesCount == 0 && unreadMessages >  unreadMessagesCount)
+    //   setTimeout( _ => { setUnreadMessages(unreadMessagesCount) }, 1500);
+    // else 
+    //   setUnreadMessages(unreadMessagesCount);
 
   }, [conversation]);
 
@@ -75,7 +75,7 @@ const ChatContent = (props) => {
               {latestMessageText}
             </Typography>
         </Box>
-        <StyledBadge badgeContent={unreadMessages} color="primary">    
+        <StyledBadge badgeContent={unreadMssgsByRecipient} color="primary">    
         </StyledBadge>
     </Box>
   );

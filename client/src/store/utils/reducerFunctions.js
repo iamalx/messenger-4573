@@ -44,6 +44,26 @@ export const updateReadMessageToStore = (state, readMessages) => {
   });
 }
 
+export const updUnreadMssgsCountToStore = (state, payload) => {
+  const { conversationId, operator } = payload;
+  console.log('operator', operator)
+  return state.map((convo) => {
+    console.log(convo)
+    if (convo.id === conversationId) {
+      const convoCopy = { ...convo };
+      
+      if (operator === 1)
+        convoCopy.unreadMssgsByRecipient += operator;
+      else 
+        convoCopy.unreadMssgsByRecipient = 0;
+        
+      return convoCopy;
+    } else {
+      return convo;
+    }
+  });
+}
+
 export const addOnlineUserToStore = (state, id) => {
   return state.map((convo) => {
     if (convo.otherUser.id === id) {

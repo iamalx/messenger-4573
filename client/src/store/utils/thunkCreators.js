@@ -6,8 +6,10 @@ import {
   setNewMessage,
   setSearchedUsers,
   updateReadMessage,
+  updUnreadMssgsCount,
 } from "../conversations";
 import { gotUser, setFetchingStatus } from "../user";
+import { updUnreadMssgsCountToStore } from "./reducerFunctions";
 
 axios.interceptors.request.use(async function (config) {
   const token = await localStorage.getItem("messenger-token");
@@ -88,7 +90,7 @@ const saveMessage = async (body) => {
 };
 
 const markMessageAsRead = async (convoId) => {
-  const { data } = await axios.put(`/api/messages/markAsRead/${convoId}`);
+  const data = await axios.put(`/api/messages/markAsRead/${convoId}`);
   return data;
 };
 
@@ -105,7 +107,7 @@ const sendMessage = (data, body) => {
 export const postMessage = (body) => async (dispatch) => {
   try {
     const data = await saveMessage(body);
-
+    console.log(data)
     if (!body.conversationId) {
       dispatch(addConversation(body.recipientId, data.message));
     } else {
@@ -120,12 +122,13 @@ export const postMessage = (body) => async (dispatch) => {
 
 export const putReadMessage = (body) => async (dispatch) =>  {
   try {
-    const data = await markMessageAsRead(body);
-    dispatch(updateReadMessage(data.updatedMessages));
+    const { data } = await markMessageAsRead(body);
+    // dispatch(updateReadMessage(data.updatedMessages));
+    console.log('res: ',data)
+    dispatch(updUnreadMssgsCount(data.convoId, 0))
   } catch (error) {
     console.error(error);
   }
-
 } 
 
 export const searchUsers = (searchTerm) => async (dispatch) => {

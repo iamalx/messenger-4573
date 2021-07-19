@@ -40,11 +40,12 @@ const ActiveChat = (props) => {
     // }
     
     console.log(conversation)
-    // if ((user.id === conversation.otherUser.id))
-    // TODO: add logic to update only if recipient and unread 
-      // props.putReadMessage(conversation.id);
-    
-  }, [conversation] );
+    if (conversation?.messages) {
+      const lastMessage =  conversation.messages[conversation.messages.length -1]
+      if ((user.id !== lastMessage.senderId && conversation.unreadMssgsByRecipient > 0 ))
+        props.putReadMessage(conversation.id);
+    }
+  }, [conversation]);
 
   return (
     <Box className={classes.root}>
