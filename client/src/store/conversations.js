@@ -5,7 +5,7 @@ import {
   removeOfflineUserFromStore,
   addMessageToStore,
   updateReadMessageToStore,
-  updUnreadMssgsCountToStore
+  updUnreadMssgsCountToStore,
 } from "./utils/reducerFunctions";
 
 // ACTIONS
@@ -45,7 +45,7 @@ export const updateReadMessage = (readMessages) => {
 export const updUnreadMssgsCount = (conversationId, operator) => {
     return {
       type: UPD_UNREAD_MESSAGE_COUNT,
-      payload: { conversationId, operator }
+      payload: { conversationId, operator },
     };
   };
 
@@ -93,9 +93,9 @@ const reducer = (state = [], action) => {
     case SET_MESSAGE:
       return addMessageToStore(state, action.payload);
     case UPDATE_READ_MESSAGE: 
-      return updateReadMessageToStore(state, action.readMessages)
+      return updateReadMessageToStore(state, action.readMessages);
     case UPD_UNREAD_MESSAGE_COUNT: 
-      return updUnreadMssgsCountToStore(state, action.payload)
+      return updUnreadMssgsCountToStore(state, action.payload);
     case ADD_ONLINE_USER: {
       return addOnlineUserToStore(state, action.id);
     }

@@ -88,7 +88,7 @@ const saveMessage = async (body) => {
 };
 
 const markMessageAsRead = async (convoId) => {
-  const data = await axios.put(`/api/messages/markAsRead/${convoId}`);
+  const { data } = await axios.put(`/api/messages/markAsRead/${convoId}`);
   return data;
 };
 
@@ -120,7 +120,7 @@ export const postMessage = (body) => async (dispatch) => {
 
 export const putReadMessage = (body) => async (dispatch) =>  {
   try {
-    const { data } = await markMessageAsRead(body);
+    const data = await markMessageAsRead(body);
     dispatch(updUnreadMssgsCount(data.conversationId, 0));
   } catch (error) {
     console.error(error);

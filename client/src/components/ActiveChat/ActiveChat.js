@@ -29,7 +29,7 @@ const ActiveChat = (props) => {
   useEffect(() => {
     // if recipient has unread messages mark messages as read in db
     if (conversation?.messages) {
-      const lastMessage =  conversation.messages[conversation.messages.length -1]
+      const lastMessage =  conversation.messages[conversation.messages.length -1];
 
       if ((user.id !== lastMessage.senderId && conversation.unreadMssgsByRecipient > 0))
         props.putReadMessage(conversation.id);
