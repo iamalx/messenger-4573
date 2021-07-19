@@ -35,12 +35,12 @@ export const setNewMessage = (message, sender) => {
   };
 };
 
-// export const updateReadMessage = (readMessages) => {
-//   return {
-//     type: UPDATE_READ_MESSAGE,
-//     readMessages,
-//   };
-// };
+export const updateReadMessage = (readMessages) => {
+  return {
+    type: UPDATE_READ_MESSAGE,
+    readMessages,
+  };
+};
 
 export const updUnreadMssgsCount = (conversationId, operator) => {
     return {
@@ -92,10 +92,9 @@ const reducer = (state = [], action) => {
       return action.conversations;
     case SET_MESSAGE:
       return addMessageToStore(state, action.payload);
-    // case UPDATE_READ_MESSAGE: 
-    //   return updateReadMessageToStore(state, action.readMessages)
+    case UPDATE_READ_MESSAGE: 
+      return updateReadMessageToStore(state, action.readMessages)
     case UPD_UNREAD_MESSAGE_COUNT: 
-      console.log(action.payload)
       return updUnreadMssgsCountToStore(state, action.payload)
     case ADD_ONLINE_USER: {
       return addOnlineUserToStore(state, action.id);

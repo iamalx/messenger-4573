@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Box, Typography, Badge } from "@material-ui/core";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 
@@ -43,27 +43,8 @@ const StyledBadge = withStyles(() => ({
 
 const ChatContent = (props) => {
   const classes = useStyles();
-  const [ unreadMessages, setUnreadMessages ] = useState(0);
-
   const { conversation } = props;
   const { latestMessageText, otherUser, unreadMssgsByRecipient } = conversation;
-
-  useEffect(() => {
-    // update unreadMessages count in state
-    // let unreadMessagesCount = 0;
-    // for (let message of conversation.messages) {
-    //   if (conversation.otherUser.id === message.senderId && !message.readByRecipient)
-    //     // count unread messages if sent to user
-    //     unreadMessagesCount ++;
-    // };
-
-    // set timeout to remove badge after 1.5s
-    // if (unreadMessagesCount == 0 && unreadMessages >  unreadMessagesCount)
-    //   setTimeout( _ => { setUnreadMessages(unreadMessagesCount) }, 1500);
-    // else 
-    //   setUnreadMessages(unreadMessagesCount);
-
-  }, [conversation]);
 
   return (
     <Box className={classes.root}>

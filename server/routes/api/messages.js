@@ -47,25 +47,14 @@ router.post("/", async (req, res, next) => {
 // updates all unread message in a convo
 router.put("/markAsRead/:convoId", async (req, res, next) => { 
   try {
-    const convoId = JSON.parse(req.params.convoId);
-    console.log('convoId: ', convoId)
-    const updatedMessage = await Message.update(
+    const conversationId = JSON.parse(req.params.convoId);
+    
+    await Message.update(
         {readByRecipient: true},
-        {returning: true, where: { conversationId: convoId, readByRecipient: false }}
+        {returning: true, where: { conversationId, readByRecipient: false }}
     );
-    console.log(updatedMessage)
-    // const { messagesToUpdate } = req.body;
-    // const updatedMessages = [];
-    
-    // for(let message of messagesToUpdate) {
-    //   const updatedMessage = await Message.update(
-    //     {readByRecipient: true},
-    //     {returning: true, where: { id: message.id }}
-    //   );
-    //   updatedMessages.push(updatedMessage[1][0]);
-    // } 
-    
-    return res.json({ convoId });
+  
+    return res.json({ conversationId });
   } catch (error) {
     next(error);
   }

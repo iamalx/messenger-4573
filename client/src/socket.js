@@ -23,7 +23,6 @@ socket.on("connect", () => {
 
   socket.on("new-message", (data) => {
     store.dispatch(setNewMessage(data.message, data.sender));
-    console.log('ON_NEW_MESSG: ', data.message)
     store.dispatch(updUnreadMssgsCount(data.message.conversationId, 1));
   });
 
