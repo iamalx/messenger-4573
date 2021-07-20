@@ -20,9 +20,9 @@ router.get("/", async (req, res, next) => {
         },
       },
       attributes: ["id"],
-      order: [[Message, "createdAt", "ASC"]],
+      order: [[Message, "createdAt", "DESC"]],
       include: [
-        { model: Message},
+        { model: Message, order: [["createdAt", "ASC"]]},
         {
           model: User,
           as: "user1",
@@ -47,7 +47,6 @@ router.get("/", async (req, res, next) => {
         },
       ],
     });
-    const editedConversation = [];
     
     for (let i = 0; i < conversations.length; i++) {
       const convo = conversations[i];
@@ -70,23 +69,13 @@ router.get("/", async (req, res, next) => {
       }
     
       // set properties for notification count and latest message preview
-      const lastMessage =  convoJSON.messages.length - 1; 
-      convoJSON.latestMessageText = convoJSON.messages[lastMessage].text;
+      convoJSON.latestMessageText = convoJSON.messages[0].text;
+      convoJSON.messages.reverse();
 
-      //  set prop for unread messages count
-      let unreadMssgsCount = 0;
-      for (let y = 0; y < convoJSON.messages.length; y++) {
-        const message = convoJSON.messages[y];
-        if (message.readByRecipient === false && userId !== message.senderId) {
-            unreadMssgsCount++;
-        }
-      }
-
-      convoJSON.unreadMssgsByRecipient = unreadMssgsCount;
-      editedConversation.unshift(convoJSON);
+      conversations[i] = convoJSON;
     }
 
-    res.json(editedConversation);
+    res.status(200).json(conversations);
   } catch (error) {
     next(error);
   }

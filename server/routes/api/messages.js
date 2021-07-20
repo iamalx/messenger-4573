@@ -9,13 +9,17 @@ router.post("/", async (req, res, next) => {
       return res.sendStatus(401);
     }
     const senderId = req.user.id;
-    const { recipientId, text, sender } = req.body;
+    const { recipientId, text, sender, conversationId } = req.body;
     
     // find conversation to make sure we are saving to the right convo
     let conversation = await Conversation.findConversation(
       senderId,
       recipientId
     );
+
+    if(conversationId && conversation.id !== conversationId) {
+      return res.sendStatus(403);
+    }
 
     if (!conversation) {
       // create a new conversation
@@ -35,7 +39,7 @@ router.post("/", async (req, res, next) => {
       readByRecipient: false,
     });
     
-    res.json({ message, sender });
+    res.status(200).json({ message, sender });
   } catch (error) {
     next(error);
   }
