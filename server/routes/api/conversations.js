@@ -22,8 +22,7 @@ router.get("/", async (req, res, next) => {
       attributes: ["id"],
       order: [[Message, 'createdAt', 'DESC']],
       include: [
-        { model: Message, required: false, right: true, separate: false, 
-        order: [[ 'createdAt', 'ASC']]},
+        { model: Message, order: [[ 'createdAt', 'ASC']]},
         {
           model: User,
           as: "user1",
@@ -92,5 +91,25 @@ router.get("/", async (req, res, next) => {
     next(error);
   }
 });
+
+// updates all unread message in a convo
+router.put("/read/:convoId", async (req, res, next) => { 
+  try {
+    if (!req.user) {
+      return res.sendStatus(401);
+    }
+    const conversationId = JSON.parse(req.params.convoId);
+    
+    await Message.update(
+        {readByRecipient: true},
+        {returning: true, where: { conversationId, readByRecipient: false }}
+    );
+  
+    res.status(200).json({ conversationId });
+  } catch (error) {
+    next(error);
+  }
+})
+
 
 module.exports = router;
