@@ -20,9 +20,10 @@ router.get("/", async (req, res, next) => {
         },
       },
       attributes: ["id"],
-      order: [[Message, "createdAt", "ASC"]],
+      order: [ [{model: Message}, 'createdAt', 'DESC'],[ 'createdAt', 'ASC']],
       include: [
-        { model: Message, order: ["createdAt", "DESC"] },
+        { model: Message, required: false, right: true, separate: false, 
+        order: [[ 'createdAt', 'ASC']]},
         {
           model: User,
           as: "user1",
@@ -46,6 +47,7 @@ router.get("/", async (req, res, next) => {
           required: false,
         },
       ],
+      // subQuery: true
     });
   
     for (let i = 0; i < conversations.length; i++) {

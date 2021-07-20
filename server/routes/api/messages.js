@@ -45,8 +45,11 @@ router.post("/", async (req, res, next) => {
 });
 
 // updates all unread message in a convo
-router.put("/markAsRead/:convoId", async (req, res, next) => { 
+router.put("/read/:convoId", async (req, res, next) => { 
   try {
+    if (!req.user) {
+      return res.sendStatus(401);
+    }
     const conversationId = JSON.parse(req.params.convoId);
     
     await Message.update(
@@ -54,7 +57,7 @@ router.put("/markAsRead/:convoId", async (req, res, next) => {
         {returning: true, where: { conversationId, readByRecipient: false }}
     );
   
-    return res.json({ conversationId });
+    res.status(200).json({ conversationId });
   } catch (error) {
     next(error);
   }
