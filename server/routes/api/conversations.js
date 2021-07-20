@@ -20,9 +20,9 @@ router.get("/", async (req, res, next) => {
         },
       },
       attributes: ["id"],
-      order: [[Message, "createdAt", "ASC"]],
+      order: [ [Message, "createdAt", "ASC"]],
       include: [
-        { model: Message},
+        { model: Message, order: [[ "createdAt", "DESC"]],separate: false },
         {
           model: User,
           as: "user1",
@@ -52,6 +52,7 @@ router.get("/", async (req, res, next) => {
     for (let i = 0; i < conversations.length; i++) {
       const convo = conversations[i];
       const convoJSON = convo.toJSON();
+      console.log(convoJSON)
 
       // set a property "otherUser" so that frontend will have easier access
       if (convoJSON.user1) {
@@ -83,10 +84,11 @@ router.get("/", async (req, res, next) => {
       }
 
       convoJSON.unreadMssgsByRecipient = unreadMssgsCount;
-      editedConversation.unshift(convoJSON);
+      // editedConversation.unshift(convoJSON);
+      conversations[i] = convoJSON;
     }
 
-    res.json(editedConversation);
+    res.json(conversations);
   } catch (error) {
     next(error);
   }
