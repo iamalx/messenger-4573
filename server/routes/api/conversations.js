@@ -22,7 +22,7 @@ router.get("/", async (req, res, next) => {
       attributes: ["id"],
       order: [[Message, "createdAt", "ASC"]],
       include: [
-        { model: Message },
+        { model: Message},
         {
           model: User,
           as: "user1",
@@ -47,10 +47,9 @@ router.get("/", async (req, res, next) => {
         },
       ],
     });
-  
+    const editedConversation = [];
+    
     for (let i = 0; i < conversations.length; i++) {
-      if(conversations[i].id == 7)
-      console.log(conversations[i].messages)
       const convo = conversations[i];
       const convoJSON = convo.toJSON();
 
@@ -69,10 +68,9 @@ router.get("/", async (req, res, next) => {
       } else {
         convoJSON.otherUser.online = false;
       }
-
-      const lastMessage =  convoJSON.messages.length - 1; 
-      
+    
       // set properties for notification count and latest message preview
+      const lastMessage =  convoJSON.messages.length - 1; 
       convoJSON.latestMessageText = convoJSON.messages[lastMessage].text;
 
       //  set prop for unread messages count
@@ -83,11 +81,12 @@ router.get("/", async (req, res, next) => {
             unreadMssgsCount++;
         }
       }
+
       convoJSON.unreadMssgsByRecipient = unreadMssgsCount;
-      conversations[i] = convoJSON;
+      editedConversation.unshift(convoJSON);
     }
 
-    res.json(conversations);
+    res.json(editedConversation);
   } catch (error) {
     next(error);
   }

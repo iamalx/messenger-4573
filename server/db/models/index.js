@@ -7,8 +7,8 @@ const Message = require("./message");
 User.hasMany(Conversation);
 Conversation.belongsTo(User, { as: "user1" });
 Conversation.belongsTo(User, { as: "user2" });
-Message.belongsTo(Conversation);
 Conversation.hasMany(Message);
+Message.belongsTo(Conversation);
 
 module.exports = {
   User,
