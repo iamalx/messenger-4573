@@ -25,6 +25,7 @@ export const addMessageToStore = (state, payload) => {
 };
  
 export const updateReadMessageToStore = (state, readMessages) => {
+  // TODO: used to update read messages once sockets issue has been addressed 
   const readMessagesIds  = readMessages.map(message =>  {return message.id});
   
   return state.map((convo) => {
