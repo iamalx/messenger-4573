@@ -108,7 +108,7 @@ router.put("/read", async (req, res, next) => {
       senderId,
       otherUserId
     );
-    console.log(conversation.id, conversationId, otherUserId, senderId)
+    
     if (conversationId !== conversation.id) {
       return res.sendStatus(403);
     }
