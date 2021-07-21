@@ -12,7 +12,7 @@ const Messages = (props) => {
       {messages.map((message, i) => {
         const time = moment(message.createdAt).format("h:mm");
         const showReadByRecipient = i === lastMessageIndex ? message.readByRecipient: false; 
-        console.log(showReadByRecipient, i)
+
         return message.senderId === userId ? (
           <SenderBubble key={message.id} text={message.text} time={time} otherUser={otherUser} readByRecipient={showReadByRecipient}/>
         ) : (

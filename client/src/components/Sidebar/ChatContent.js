@@ -32,6 +32,10 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "center",
     borderRadius: 10,
   },
+  boldMessage: {
+    fontWeight: "bold",
+    color: "black"
+  },
 }));
 
 const StyledBadge = withStyles(() => ({
@@ -52,7 +56,7 @@ const ChatContent = (props) => {
             <Typography className={classes.username}>
               {otherUser.username}
             </Typography>
-            <Typography className={classes.previewText}>
+            <Typography className={`${unreadMssgsByRecipient && classes.boldMessage} ${classes.previewText}` }>
               {latestMessageText}
             </Typography>
         </Box>

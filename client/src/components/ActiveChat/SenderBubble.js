@@ -14,6 +14,12 @@ const useStyles = makeStyles(() => ({
     fontWeight: "bold",
     marginBottom: 5
   },
+  avatar: {
+    height: 20,
+    width: 20,
+    marginRight: 11,
+    marginTop: 6
+  },
   text: {
     fontSize: 14,
     color: "#91A3C0",
