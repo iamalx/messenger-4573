@@ -75,13 +75,16 @@ router.get("/", async (req, res, next) => {
       convoJSON.latestMessageText = convoJSON.messages[lastMessage].text;
 
       //  set prop for unread messages count
-      let unreadMssgsCount = 0;
-      for (let y = 0; y < convoJSON.messages.length; y++) {
-        const message = convoJSON.messages[y];
-        if (message.readByRecipient === false && userId !== message.senderId) {
-            unreadMssgsCount++;
+      const unreadMssgsCount = await Message.count({
+        where: {
+          conversationId: convoJSON.id,
+          readByRecipient: false,
+          senderId: {
+              [Op.not]: userId,
+            },
         }
-      }
+      });
+      
       convoJSON.unreadMssgsByRecipient = unreadMssgsCount;
       conversations[i] = convoJSON;
     }
