@@ -62,7 +62,7 @@ router.get("/", async (req, res, next) => {
       }
 
       // set property for online status of the other user
-      const otherUserId = convoJSON.otherUser.id
+      const otherUserId = convoJSON.otherUser.id;
       if (onlineUserSockets[otherUserId]?.length > 0) {
         convoJSON.otherUser.online = true;
       } else {
