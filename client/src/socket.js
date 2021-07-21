@@ -13,10 +13,12 @@ socket.on("connect", () => {
   console.log("connected to server");
   
   socket.on("add-online-user", (id) => {
+    console.log(id, 'online')
     store.dispatch(addOnlineUser(id));
   });
 
   socket.on("remove-offline-user", (id) => {
+    console.log(id, 'ofline')
     store.dispatch(removeOfflineUser(id));
   });
 
