@@ -34,29 +34,19 @@ const io = require("socket.io")(server);
 
 
 io.on("connection", (socket)  => {
-  // console.log(socket)
-  // console.log('app,', app)
   let userId = null;
-  console.log('onConnect', userId);
 
   socket.on("go-online", (id) => {
-    console.log('online,',id)
-    // console.log()
     userId = id;
-    if (!onlineUsers.includes(id)) {
-      onlineUsers.push(id);
-    }
-    if (!onlineUserSockets[id]) {
+    
+    if (!(id in onlineUserSockets)) {
       onlineUserSockets[id] = [];
-      console.log('socket')
     }
     onlineUserSockets[id].push(socket.id);
-    console.log(onlineUserSockets)
-    socket.join('online');
 
     // send the user who just went online to everyone else who is already online
+    socket.join('online');
     socket.broadcast.to('online').emit("add-online-user", id);
-    // socket.broadcast.emit("add-online-user", id);
   });
 
   socket.on('join-room', (id) => {   
@@ -79,41 +69,25 @@ io.on("connection", (socket)  => {
   });
 
   socket.on("logout", (id) => {
-    if (onlineUsers.includes(id)) {
-      const userIndex = onlineUsers.indexOf(id);
-      onlineUsers.splice(userIndex, 1);
-      console.log('logout', id)
       removeOfflineSocket(id);
-    
-      // socket.broadcast.emit("remove-offline-user", id);
-      // z
-    }
   });
 
   socket.on("disconnect", (id) => {
-    console.log('disconnected user', userId)
-    if(userId) 
-    removeOfflineSocket(userId)
+    if(userId) removeOfflineSocket(userId);
   });
 
   function removeOfflineSocket(id) {
-    console.log(onlineUserSockets, 'if in')
-    if(!(id in onlineUserSockets)) 
+    if (!(id in onlineUserSockets)) 
       return;
     
-    const userIndexLs =  onlineUserSockets[id].indexOf(socket.id);
-    onlineUserSockets[id].splice(userIndexLs, 1);
-    console.log(onlineUserSockets, 'pre')
-    if( onlineUserSockets[id].length === 0) {
+    const userIndex =  onlineUserSockets[id].indexOf(socket.id);
+    onlineUserSockets[id].splice(userIndex, 1);
+    if (onlineUserSockets[id].length === 0) {
       delete onlineUserSockets[id];
 
-      socket.leave(id.toString()); 
       socket.broadcast.to('online').emit("remove-offline-user", id);
-      socket.leave('online')
-
-      
-      console.log(onlineUserSockets, 'post')
-      // socket.disconnect();
+      socket.leave(id.toString()); 
+      socket.leave('online');     
     }
   }
 });
