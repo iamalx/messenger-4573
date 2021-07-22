@@ -26,7 +26,8 @@ router.post("/register", async (req, res, next) => {
       process.env.SESSION_SECRET,
       { expiresIn: 86400 }
     );
-    res.json({
+    
+    res.status(200).json({
       ...user.dataValues,
       token,
     });
@@ -64,7 +65,8 @@ router.post("/login", async (req, res, next) => {
         process.env.SESSION_SECRET,
         { expiresIn: 86400 }
       );
-      res.json({
+
+      res.status(200).json({
         ...user.dataValues,
         token,
       });
@@ -80,9 +82,9 @@ router.delete("/logout", (req, res, next) => {
 
 router.get("/user", (req, res, next) => {
   if (req.user) {
-    return res.json(req.user);
+    return res.status(200).json(req.user);
   } else {
-    return res.json({});
+    return res.status(401).json({});
   }
 });
 

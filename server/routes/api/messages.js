@@ -4,11 +4,8 @@ const onlineUsers = require("../../onlineUsers");
 const isAuth = require("../../middleware/is-auth");
 
 // expects {recipientId, text, conversationId } in body (conversationId will be null if no conversation exists yet)
-router.post("/", async (req, res, next) => {
+router.post("/", isAuth, async (req, res, next) => {
  try {
-    // if (!req.user) {
-    //   return res.sendStatus(401);
-    // }
     const senderId = req.user.id;
     const { recipientId, text, sender, conversationId } = req.body;
     

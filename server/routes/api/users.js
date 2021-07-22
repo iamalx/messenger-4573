@@ -3,12 +3,10 @@ const { User } = require("../../db/models");
 const { Op } = require("sequelize");
 const onlineUsers = require("../../onlineUsers");
 const isAuth = require("../../middleware/is-auth");
+
 // find users by username
 router.get("/:username", isAuth, async (req, res, next) => {
   try {
-    // if (!req.user) {
-    //   return res.sendStatus(401);
-    // }
     const { username } = req.params;
 
     const users = await User.findAll({

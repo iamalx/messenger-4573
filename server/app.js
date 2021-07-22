@@ -19,22 +19,23 @@ app.use(json());
 app.use(urlencoded({ extended: false }));
 app.use(express.static(join(__dirname, "public")));
 
-app.use(function (req, res, next) {
-  const token = req.headers["x-access-token"];
-  if (token) {
-    jwt.verify(token, process.env.SESSION_SECRET, (err, decoded) => {
-      if (err) {
-        return next();
-      }
-      User.findOne({
-        where: { id: decoded.id },
-      }).then((user) => {
+app.use((req, res, next)  => {
+  try {
+    const token = req.headers["x-access-token"];
+    if (token) {
+      jwt.verify(token, process.env.SESSION_SECRET, async (err, decoded) => {
+        if (err) {
+          return next();
+        }
+        const user = await User.findOne({ where: { id: decoded.id }, })
         req.user = user;
         return next();
       });
-    });
-  } else {
-    return next();
+    } else {
+      return next();
+    }
+  } catch(error) {
+    next(error);
   }
 });
 
@@ -43,12 +44,12 @@ app.use("/auth", require("./routes/auth"));
 app.use("/api", require("./routes/api"));
 
 // catch 404 and forward to error handler
-app.use(function (req, res, next) {
+app.use((req, res, next) => {
   next(createError(404));
 });
 
 // error handler
-app.use(function (err, req, res, next) {
+app.use((err, req, res, next) => {
   // set locals, only providing error in development
   console.log(err);
   res.locals.message = err.message;
