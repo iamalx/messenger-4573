@@ -23,7 +23,7 @@ socket.on("connect", () => {
 
   socket.on("new-message", (data) => {
     store.dispatch(setNewMessage(data.message, data.sender));
-    store.dispatch(updUnreadMssgsCount(data.message.conversationId, 1));
+    store.dispatch(updUnreadMssgsCount(data.message.conversationId, true));
   });
 
 });

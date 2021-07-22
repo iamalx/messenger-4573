@@ -122,7 +122,7 @@ export const putReadMessage = (body) => async (dispatch) =>  {
   try {
     console.log(body)
     const data = await markMessageAsRead(body);
-    dispatch(updUnreadMssgsCount(data.conversationId, 0));
+    dispatch(updUnreadMssgsCount(data.conversationId, false));
   } catch (error) {
     console.error(error);
   }

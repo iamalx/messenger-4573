@@ -46,14 +46,14 @@ export const updateReadMessageToStore = (state, readMessages) => {
 }
 
 export const updUnreadMssgsCountToStore = (state, payload) => {
-  const { conversationId, operator } = payload;
+  const { conversationId, increaseCount } = payload;
 
   return state.map((convo) => {
     if (convo.id === conversationId) {
       const convoCopy = { ...convo };
       
-      if (operator === 1)
-        convoCopy.unreadMssgsByRecipient += operator;
+      if (increaseCount)
+        convoCopy.unreadMssgsByRecipient ++;
       else 
         convoCopy.unreadMssgsByRecipient = 0;
         

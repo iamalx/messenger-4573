@@ -45,7 +45,7 @@ export const updateReadMessage = (readMessages) => {
 export const updUnreadMssgsCount = (conversationId, operator) => {
     return {
       type: UPD_UNREAD_MESSAGE_COUNT,
-      payload: { conversationId, operator },
+      payload: { conversationId, increaseCount  },
     };
   };
 

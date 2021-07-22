@@ -46,7 +46,6 @@ router.get("/", async (req, res, next) => {
           required: false,
         },
       ],
-      // subQuery: true
     });
   
     for (let i = 0; i < conversations.length; i++) {
