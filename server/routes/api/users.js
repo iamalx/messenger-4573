@@ -2,13 +2,11 @@ const router = require("express").Router();
 const { User } = require("../../db/models");
 const { Op } = require("sequelize");
 const onlineUsers = require("../../onlineUsers");
+const isAuth = require("../../middleware/is-auth");
 
 // find users by username
-router.get("/:username", async (req, res, next) => {
+router.get("/:username", isAuth, async (req, res, next) => {
   try {
-    if (!req.user) {
-      return res.sendStatus(401);
-    }
     const { username } = req.params;
 
     const users = await User.findAll({
@@ -30,10 +28,10 @@ router.get("/:username", async (req, res, next) => {
       }
       users[i] = userJSON;
     }
-    res.json(users);
+    res.status(200).json(users);
   } catch (error) {
     next(error);
   }
 });
- 
+
 module.exports = router;
