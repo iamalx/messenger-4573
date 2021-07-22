@@ -4,6 +4,7 @@ import {
   setNewMessage,
   removeOfflineUser,
   addOnlineUser,
+  updUnreadMssgsCount,
 } from "./store/conversations";
 
 const socket = io(window.location.origin);
@@ -22,6 +23,7 @@ socket.on("connect", () => {
 
   socket.on("new-message", (data) => {
     store.dispatch(setNewMessage(data.message, data.sender));
+    store.dispatch(updUnreadMssgsCount(data.message.conversationId, true));
   });
 
 });

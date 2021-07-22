@@ -5,7 +5,7 @@ import {
   addConversation,
   setNewMessage,
   setSearchedUsers,
-  updateReadMessage,
+  updUnreadMssgsCount,
 } from "../conversations";
 import { gotUser, setFetchingStatus } from "../user";
 
@@ -82,13 +82,13 @@ export const fetchConversations = () => async (dispatch) => {
   }
 };
 
-const saveMessage = async (body) => {
-  const { data } = await axios.post("/api/messages", body);
+const markMessageAsRead = async (body) => {
+  const { data } = await axios.put(`/api/conversations/read`, body);
   return data;
 };
 
-const markMessageAsRead = async (body) => {
-  const { data } = await axios.put("/api/messages", body);
+const saveMessage = async (body) => {
+  const { data } = await axios.post("/api/messages", body);
   return data;
 };
 
@@ -120,12 +120,12 @@ export const postMessage = (body) => async (dispatch) => {
 
 export const putReadMessage = (body) => async (dispatch) =>  {
   try {
+    console.log(body)
     const data = await markMessageAsRead(body);
-    dispatch(updateReadMessage(data.updatedMessages));
+    dispatch(updUnreadMssgsCount(data.conversationId, false));
   } catch (error) {
     console.error(error);
   }
-
 } 
 
 export const searchUsers = (searchTerm) => async (dispatch) => {

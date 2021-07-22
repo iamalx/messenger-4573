@@ -27,19 +27,21 @@ const ActiveChat = (props) => {
   const conversation = props.conversation || {};
 
   useEffect(() => {
-    // mark messages as read
-    if (conversation?.messages) {
-      const messagesToUpdate = [];
-      for (let message of conversation.messages) {
-        // if readByRecipient is false add to array to send to API 
-        if ((user.id !== message.senderId) && (!message.readByRecipient))
-          messagesToUpdate.push(message);
-      };
-      if (messagesToUpdate.length >= 1)
-        props.putReadMessage({ messagesToUpdate });
-    }
+    // if recipient has unread messages mark messages as read in db
     
-  }, [conversation] );
+    if (conversation?.messages) {
+      const lastMessage =  conversation.messages[conversation.messages.length -1];
+
+      if (( lastMessage && user.id !== lastMessage?.senderId && conversation.unreadMssgsByRecipient > 0)) {
+        const reqBody = {
+          conversationId: conversation.id, 
+          otherUserId: conversation.otherUser.id,
+        }
+        props.putReadMessage(reqBody);
+      }
+       
+    }
+  }, [conversation]);
 
   return (
     <Box className={classes.root}>
