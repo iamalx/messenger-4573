@@ -25,6 +25,7 @@ export const addMessageToStore = (state, payload) => {
 };
  
 export const updateReadMessageToStore = (state, readMessages) => {
+  // TODO: used to update read messages once sockets issue has been addressed 
   const readMessagesIds  = readMessages.map(message =>  {return message.id});
   
   return state.map((convo) => {
@@ -37,6 +38,25 @@ export const updateReadMessageToStore = (state, readMessages) => {
           convoCopy.messages[i].readByRecipient = true; 
       });
       
+      return convoCopy;
+    } else {
+      return convo;
+    }
+  });
+}
+
+export const updUnreadMssgsCountToStore = (state, payload) => {
+  const { conversationId, increaseCount } = payload;
+
+  return state.map((convo) => {
+    if (convo.id === conversationId) {
+      const convoCopy = { ...convo };
+      
+      if (increaseCount)
+        convoCopy.unreadMssgsByRecipient ++;
+      else 
+        convoCopy.unreadMssgsByRecipient = 0;
+        
       return convoCopy;
     } else {
       return convo;

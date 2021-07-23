@@ -69,6 +69,17 @@ router.get("/", async (req, res, next) => {
         convoJSON.otherUser.online = false;
       }
       // set properties for notification count and latest message preview
+      const unreadMssgsCount = await Message.count({
+        where: {
+          conversationId: convoJSON.id,
+          readByRecipient: false,
+          senderId: {
+              [Op.not]: userId,
+            },
+        }
+      });
+      
+      convoJSON.unreadMssgsByRecipient = unreadMssgsCount;
       convoJSON.latestMessageText = convoJSON.messages[0].text;
       convoJSON.messages.reverse();
 
@@ -80,5 +91,34 @@ router.get("/", async (req, res, next) => {
     next(error);
   }
 });
+
+// updates all unread message in a convo
+router.put("/read", async (req, res, next) => { 
+  try {
+    if (!req.user) {
+      return res.sendStatus(401);
+    }
+    const { conversationId , otherUserId } = req.body;
+    const senderId = req.user.id;
+
+    const conversation = await Conversation.findConversation(
+      senderId,
+      otherUserId
+    );
+    
+    if (conversationId !== conversation.id) {
+      return res.sendStatus(403);
+    }
+    
+    await Message.update(
+        {readByRecipient: true},
+        {returning: true, where: { conversationId, readByRecipient: false }}
+    );
+  
+    res.status(200).json({ conversationId });
+  } catch (error) {
+    next(error);
+  }
+})
 
 module.exports = router;

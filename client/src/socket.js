@@ -4,6 +4,7 @@ import {
   setNewMessage,
   removeOfflineUser,
   addOnlineUser,
+  updUnreadMssgsCount,
 } from "./store/conversations";
 
 const socket = (token) => {
@@ -23,9 +24,9 @@ const socket = (token) => {
       store.dispatch(removeOfflineUser(id));
     });
 
-    socket.on("new-message", (data) => {
-      store.dispatch(setNewMessage(data.message, data.sender));
-    });
+  socket.on("new-message", (data) => {
+    store.dispatch(setNewMessage(data.message, data.sender));
+    store.dispatch(updUnreadMssgsCount(data.message.conversationId, true));
   });
   
   return socket;
