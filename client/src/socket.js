@@ -46,20 +46,14 @@ socket.on("connect", () => {
   console.log("connected to server");
   
   socket.on("add-online-user", (id) => {
-    console.log('onlinen', id)
-
     store.dispatch(addOnlineUser(id));
   });
 
   socket.on("remove-offline-user", (id) => {
-    console.log('ofline', id)
-
     store.dispatch(removeOfflineUser(id));
   });
 
   socket.on("new-message", (data) => {
-    console.log('new-mssg', data)
-
     store.dispatch(setNewMessage(data.message, data.sender));
   });
 
