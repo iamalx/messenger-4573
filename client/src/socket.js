@@ -30,6 +30,7 @@ const socket = (token) => {
   });
   
   return socket;
+  });
 }
 
 export default socket;
