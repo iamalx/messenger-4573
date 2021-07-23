@@ -1,6 +1,6 @@
 const router = require("express").Router();
 const { Conversation, Message } = require("../../db/models");
-const onlineUsers = require("../../onlineUsers");
+const onlineUserSockets = require("../../onlineUserSockets");
 
 // expects {recipientId, text, conversationId } in body (conversationId will be null if no conversation exists yet)
 router.post("/", async (req, res, next) => {
@@ -27,9 +27,9 @@ router.post("/", async (req, res, next) => {
         user1Id: senderId,
         user2Id: recipientId,
       });
-      if (onlineUsers.includes(sender.id)) {
+      if (onlineUserSockets[sender.id]?.length > 0) {
         sender.online = true;
-      }
+      } 
     } 
     
     const message = await Message.create({
@@ -38,7 +38,7 @@ router.post("/", async (req, res, next) => {
       conversationId: conversation.id,
       readByRecipient: false,
     });
-    
+
     res.status(200).json({ message, sender });
   } catch (error) {
     next(error);

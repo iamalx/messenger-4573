@@ -1,7 +1,7 @@
 const router = require("express").Router();
 const { User, Conversation, Message } = require("../../db/models");
 const { Op } = require("sequelize");
-const onlineUsers = require("../../onlineUsers");
+const onlineUserSockets = require("../../onlineUserSockets");
 
 // get all conversations for a user, include latest message text for preview, and all messages
 // include other user model so we have info on username/profile pic (don't include current user info)
@@ -62,12 +62,12 @@ router.get("/", async (req, res, next) => {
       }
 
       // set property for online status of the other user
-      if (onlineUsers.includes(convoJSON.otherUser.id)) {
+      const otherUserId = convoJSON.otherUser.id;
+      if (onlineUserSockets[otherUserId]?.length > 0) {
         convoJSON.otherUser.online = true;
       } else {
         convoJSON.otherUser.online = false;
       }
-    
       // set properties for notification count and latest message preview
       const unreadMssgsCount = await Message.count({
         where: {

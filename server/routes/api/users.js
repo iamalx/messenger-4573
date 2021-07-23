@@ -1,7 +1,7 @@
 const router = require("express").Router();
 const { User } = require("../../db/models");
 const { Op } = require("sequelize");
-const onlineUsers = require("../../onlineUsers");
+const onlineUserSockets = require("../../onlineUserSockets");
 
 // find users by username
 router.get("/:username", async (req, res, next) => {
@@ -25,12 +25,13 @@ router.get("/:username", async (req, res, next) => {
     // add online status to each user that is online
     for (let i = 0; i < users.length; i++) {
       const userJSON = users[i].toJSON();
-      if (onlineUsers.includes(userJSON.id)) {
+      if (onlineUserSockets[userJSON.id]?.length > 0) {
         userJSON.online = true;
-      }
+      } 
       users[i] = userJSON;
     }
-    res.json(users);
+
+    res.status(200).json(users);
   } catch (error) {
     next(error);
   }

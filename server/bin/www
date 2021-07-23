@@ -10,7 +10,7 @@ require("dotenv").config();
 const { app, sessionStore } = require("../app");
 const http = require("http");
 const db = require("../db");
-const onlineUsers = require("../onlineUsers");
+const onlineUserSockets = require("../onlineUserSockets");
 
 /**
  * Get port from environment and store in Express.
@@ -30,45 +30,81 @@ const server = http.createServer(app);
  */
 
 const io = require("socket.io")(server);
+const jwt = require('jsonwebtoken');
 
-io.on("connection", (socket) => {
-  socket.on("go-online", (id) => {
-    if (!onlineUsers.includes(id)) {
-      onlineUsers.push(id);
-    }
-    // send the user who just went online to everyone else who is already online
-    socket.broadcast.emit("add-online-user", id);
-  });
-
-  socket.on('join-room', (id) => {   
-    // add user to room with ID to send message if they are the reciver when "new-message" is emited   
-    socket.join(id.toString());
+io.use((socket, next) => {
+  if (socket.handshake.query?.token) {
+    jwt.verify(socket.handshake.query.token, process.env.SESSION_SECRET, (err, decoded) => {
+      if (err) {
+        return next(new Error('Authentication error'));
+      }
+      socket.decoded = decoded;
+      next();
+    });
+  } else {
+    next(new Error('Authentication error'));
+  }    
   })
+  .on('connection', (socket) => {
+    let userId = null;
 
-  socket.on("new-message", (data) => {
-    const recipientId = data.recipientId.toString();
+    socket.on("go-online", (id) => {
+      userId = id;
 
-    // send message to user/room if they are the receiver
-    socket.broadcast
-      .to(recipientId)
-      .emit('new-message', 
-        { 
-          message: data.message,
-          sender: data.sender,
-        }
-      );
-  });
+      if (!(id in onlineUserSockets)) {
+        onlineUserSockets[id] = [];
+      }
+      onlineUserSockets[id].push(socket.id);
 
-  socket.on("logout", (id) => {
-    if (onlineUsers.includes(id)) {
-      userIndex = onlineUsers.indexOf(id);
-      onlineUsers.splice(userIndex, 1);
-      socket.broadcast.emit("remove-offline-user", id);
+      // send the user who just went online to everyone else who is already online
+      socket.join('online');
+      socket.broadcast.to('online').emit("add-online-user", id);
+    });
+
+    socket.on('join-room', (id) => {   
+      // add user to room with ID to send message if they are the reciver when "new-message" is emited   
+      socket.join(id.toString());
+    })
+
+    socket.on("new-message", (data) => {
+      const recipientId = data.recipientId.toString();
+      
+      // send message to user/room if they are the receiver
+      socket.broadcast
+        .to(recipientId)
+        .emit('new-message', 
+          { 
+            message: data.message,
+            sender: data.sender,
+          }
+        );
+    });
+
+    socket.on("logout", (id) => {
+        removeOfflineSocket(id);
+    });
+
+    socket.on("disconnect", () => {
+      if(userId) removeOfflineSocket(userId);
+    });
+
+  function removeOfflineSocket(id) {
+    if (!(id in onlineUserSockets)) 
+      return;
+
+    const userIndex =  onlineUserSockets[id].indexOf(socket.id);
+    if(userIndex >= 0)
+      onlineUserSockets[id].splice(userIndex, 1);
+
+    if (onlineUserSockets[id].length === 0) {
+      delete onlineUserSockets[id];
+      socket.broadcast.to('online').emit("remove-offline-user", id);
       socket.leave(id.toString()); 
+      socket.leave('online');     
     }
-  });
-
+  }
 });
+
 
 sessionStore
   .sync()
