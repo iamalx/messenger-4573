@@ -45,11 +45,8 @@ export const updateReadMessageToStore = (state, readMessages) => {
 }
 
 export const addOnlineUserToStore = (state, id) => {
-        console.log('1', id, state)
-
   return state.map((convo) => {
     if (convo.otherUser.id === id) {
-      console.log('jj', id)
       const convoCopy = { ...convo };
       convoCopy.otherUser.online = true;
       return convoCopy;
