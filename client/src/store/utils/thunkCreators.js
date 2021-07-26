@@ -52,12 +52,13 @@ export const login = (credentials) => async (dispatch) => {
   try {
     const { data } = await axios.post("/auth/login", credentials);
     await localStorage.setItem("messenger-token", data.token);
-    dispatch(gotUser(data));
     authenticateSocket();
+    dispatch(gotUser(data));
     emitOnlineSocket(data);
   } catch (error) {
     console.error(error);
-    dispatch(gotUser({ error: error.response.data.error || "Server Error" }));
+    if(error.response)
+      dispatch(gotUser({ error: error.response.data.error || "Server Error" }));
   }
 };
 
@@ -142,6 +143,7 @@ export const searchUsers = (searchTerm) => async (dispatch) => {
 let connectedSocket;
 
 const emitOnlineSocket = (data) => {
+  console.log(connectedSocket)
   connectedSocket.emit("go-online", data.id);
   connectedSocket.emit('join-room', data.id);
 }

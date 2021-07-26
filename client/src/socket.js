@@ -7,7 +7,7 @@ import {
   updUnreadMssgsCount,
 } from "./store/conversations";
 
-const socket = (token) => {
+const socket = (token, cb) => {
   const socket = io(window.location.origin, {
     query: { token }
   });
@@ -24,13 +24,13 @@ const socket = (token) => {
       store.dispatch(removeOfflineUser(id));
     });
 
-  socket.on("new-message", (data) => {
-    store.dispatch(setNewMessage(data.message, data.sender));
-    store.dispatch(updUnreadMssgsCount(data.message.conversationId, true));
-  });
+    socket.on("new-message", (data) => {
+      store.dispatch(setNewMessage(data.message, data.sender));
+      store.dispatch(updUnreadMssgsCount(data.message.conversationId, true));
+    });
   
-  return socket;
   });
+  return socket;
 }
 
 export default socket;
